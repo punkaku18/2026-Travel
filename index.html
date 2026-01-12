@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 姐妹京阪春季之旅</title>
+    <style>
+        /* --- 鄉村可愛大自然風格 (Natural & Cute) --- */
+        :root {
+            --bg-color: #faf7f0;       /* 燕麥米色背景 */
+            --card-bg: #ffffff;        /* 純白卡片 */
+            --primary-brown: #8d6e63;  /* 溫柔棕色 (文字) */
+            --soft-tan: #eecda3;       /* 奶茶色 (按鈕/強調) */
+            --sage-green: #aed581;     /* 鼠尾草綠 (點綴色/大自然感) */
+            --dashed-line: 2px dashed #d7ccc8; /* 像縫紉線一樣的虛線 */
+            
+            /* 住宿卡片配色 */
+            --hotel-border: 2px solid #aed581; /* 綠色框框 */
+            --hotel-bg: #f1f8e9;       /* 極淡的綠色背景 */
+            --hotel-text: #558b2f;     /* 深綠色文字 */
+        }
+
+        body {
+            font-family: '微軟正黑體', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-brown);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            background-image: radial-gradient(#d7ccc8 1px, transparent 1px); /* 小圓點背景 */
+            background-size: 20px 20px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--card-bg);
+            border-radius: 30px; /* 超圓潤邊角 */
+            box-shadow: 0 8px 20px rgba(141, 110, 99, 0.15);
+            overflow: hidden;
+            border: 6px solid #fff;
+            position: relative;
+        }
+
+        /* 頂部圖片與標題區 */
+        .header-area {
+            text-align: center;
+            background-color: #ffe0b2; /* 預設底色 */
+            padding-bottom: 25px;
+            position: relative;
+        }
+
+        .header-area::after {
+            /* 製作波浪邊緣效果 */
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: radial-gradient(circle, var(--card-bg) 10px, transparent 11px);
+            background-size: 20px 20px;
+            background-position: bottom;
+        }
+
+        .top-image {
+            width: 100%;
+            height: 220px; 
+            object-fit: cover;
+            display: block;
+            opacity: 0.9;
+        }
+
+        .title-box {
+            background: rgba(255, 255, 255, 0.95);
+            margin: -40px 20px 0 20px;
+            padding: 15px;
+            border-radius: 20px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px dashed var(--soft-tan); /* 標題框框是虛線 */
+        }
+
+        .main-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #5d4037;
+            margin-bottom: 5px;
+        }
+
+        .sub-title {
+            font-size: 0.9rem;
+            color: #8d6e63;
+        }
+
+        /* 左右滑動選單 (像貼紙一樣) */
+        .tabs-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 15px 15px;
+            background: #fff;
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+        }
+        .tabs-container::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            background: #fff8e1; /* 淡黃色底 */
+            border: 1px dashed var(--primary-brown);
+            border-radius: 15px 15px 5px 5px; /* 上圓下方，像標籤 */
+            padding: 10px 14px;
+            color: var(--primary-brown);
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            display: inline-block;
+            text-align: center;
+            min-width: 65px;
+            transition: 0.3s;
+        }
+
+        .tab-btn strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+            color: #5d4037;
+        }
+
+        .tab-btn.active {
+            background-color: var(--soft-tan);
+            color: #fff;
+            border-style: solid;
+            border-color: var(--soft-tan);
+            transform: translateY(-3px); /* 被選中時會跳起來一點 */
+            box-shadow: 0 4px 0 #d7ccc8; /* 立體感 */
+        }
+        .tab-btn.active strong { color: #fff; }
+
+        /* 內容區塊 */
+        .content-area {
+            padding: 20px;
+            min-height: 400px;
+            background-color: #fff;
+        }
+
+        /* 行程卡片 */
+        .checklist-card {
+            background: #fff;
+            border: var(--dashed-line);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        /* 裝飾用：卡片角落的小膠帶效果 */
+        .checklist-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 25px;
+            background-color: rgba(238, 205, 163, 0.5); /* 半透明奶茶色膠帶 */
+            transform: translateX(-50%) rotate(-2deg);
+        }
+
+        h3 {
+            border-bottom: 3px dotted var(--sage-green); /* 綠色點點底線 */
+            display: inline-block;
+            margin-top: 0;
+            padding-bottom: 5px;
+            font-size: 1.1rem;
+            color: #558b2f;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #4e342e;
+        }
+        .check-item input { 
+            margin-right: 12px; 
+            accent-color: var(--sage-green); 
+            width: 20px; 
+            height: 20px; 
+        }
+
+        /* 時間軸樣式 */
+        .timeline-item {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+        .time {
+            font-weight: bold;
+            color: var(--sage-green);
+            min-width: 50px;
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+        .desc {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        /* 住宿框框 (森林小屋風) */
+        .hotel-card {
+            background-color: var(--hotel-bg);
+            border: var(--hotel-border);
+            border-radius: 18px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hotel-card::after {
+            content: '🌿'; /* 小葉子裝飾 */
+            position: absolute;
+            top: -12px;
+            right: 10px;
+            font-size: 1.2rem;
+            background: #fff;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .hotel-title {
+            font-weight: bold;
+            color: var(--hotel-text);
+            margin-bottom: 5px;
+            display: block;
+            font-size: 1rem;
+        }
+
+        .map-btn {
+            display: inline-block;
+            background-color: var(--sage-green);
+            color: white;
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            box-shadow: 0 3px 0 #7cb342; /* 按鈕立體感 */
+            transition: 0.2s;
+        }
+        .map-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        /* 隱藏/顯示控制 */
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.6s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="header-area">
+            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800&auto=format&fit=crop" class="top-image" alt="京都風景">
+            
+            <div class="title-box">
+                <div class="main-title">🌸 7姊妹京阪春季之旅</div>
+                <div class="sub-title">2026/3/4 - 3/8 京都+大阪+奈良</div>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('checklist')"><strong>行前</strong>清單</button>
+            <button class="tab-btn" onclick="switchTab('day1')"><strong>Day1</strong>3/4(三)</button>
+            <button class="tab-btn" onclick="switchTab('day2')"><strong>Day2</strong>3/5(四)</button>
+            <button class="tab-btn" onclick="switchTab('day3')"><strong>Day3</strong>3/6(五)</button>
+            <button class="tab-btn" onclick="switchTab('day4')"><strong>Day4</strong>3/7(六)</button>
+            <button class="tab-btn" onclick="switchTab('day5')"><strong>Day5</strong>3/8(日)</button>
+        </div>
+
+        <div class="content-area">
+            
+            <div id="checklist" class="page active">
+                <div class="checklist-card">
+                    <h3>👜 出國前完成</h3>
+                    <label class="check-item"><input type="checkbox"> 保險增加</label>
+                    <label class="check-item"><input type="checkbox" checked>出國網路購買 </label>
+                    <label class="check-item"><input type="checkbox"> 換日幣</label>
+                    <label class="check-item"><input type="checkbox"> 填寫Visit Japan Web</label>
+                    <h3>👜出國必備 </h3>
+                    <label class="check-item"><input type="checkbox"> 護照</label>
+                    <label class="check-item"><input type="checkbox" checked> 日幣</label>
+                    <label class="check-item"><input type="checkbox"> 行動電源、充電線</label>
+                    <label class="check-item"><input type="checkbox"> 止痛藥、退黑激素、排便</label>
+
+
+                </div>
+                <div class="checklist-card">
+                    <h3>👘 重點預約確認</h3>
+                    <label class="check-item"><input type="checkbox"> 確定機票是什麼時候劃位</label>
+                    <label class="check-item"><input type="checkbox"> Day2 和服店 (已預約)</label>
+                    <label class="check-item"><input type="checkbox"> Day3 奈良包車 (需預約)</label>
+                    <label class="check-item"><input type="checkbox"> Day3 志津香釜飯 (需預約)</label>
+                    <label class="check-item"><input type="checkbox"> Day4 梅田展望台 (需買票)</label>
+                </div>
+            </div>
+
+            <div id="day1" class="page">
+                <div class="checklist-card">
+                    <h3>🛫 3/4(三) 抵達京都</h3>
+                    
+                    <div class="timeline-item">
+                        <div class="time">11:15</div>
+                        <div class="desc">桃園起飛 (CX564)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">14:55</div>
+                        <div class="desc">抵達關西機場 🛬</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">15:45</div>
+                        <div class="desc">搭乘 HARUKA 往京都 🚅 (已買票)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">17:30</div>
+                        <div class="desc">Check-in 休息整理行李</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">18:30</div>
+                        <div class="desc">四条河原町商圈逛街 🛍️</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">21:00</div>
+                        <div class="desc">超商買宵夜回飯店 🍢</div>
+                    </div>
+
+                    <div class="hotel-card">
+                        <span class="hotel-title">🏠 京都好風景酒店</span>
+                        <div style="font-size: 0.9rem; margin-bottom: 5px;">Kyoto Good View Hotel</div>
+                        <a href="https://www.google.com.tw/maps/place/Good+Nature+Hotel+Kyoto/@35.0026293,135.766589,17z/data=!3m1!5s0x600108957fd719a7:0x472e27a4b520f540!4m11!3m10!1s0x600108bfc95e7e2d:0x2f8cbb4d2d48f501!5m4!1s2026-04-17!2i2!4m1!1i2!8m2!3d35.0026293!4d135.7691693!16s%2Fg%2F11h1mk__cm?entry=ttu&g_ep=EgoyMDI2MDEwNy4wIKXMDSoASAFQAw%3D%3D=京都好風景酒店" target="_blank" class="map-btn">🗺️ 導航去飯店</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day2" class="page">
+                <div class="checklist-card">
+                    <h3>👘 3/5(四) 和服美照日</h3>
+                    
+                    <div class="timeline-item">
+                        <div class="time">09:00</div>
+                        <div class="desc">抵達和服店 (換裝) ✨</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">10:30</div>
+                        <div class="desc">清水寺 / 二年坂 / 三年坂 📸<br><span style="color:#aaa;font-size:0.8rem;">最美拍照時段！</span></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">12:00</div>
+                        <div class="desc">午餐時間 🍱</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">13:30</div>
+                        <div class="desc">祇園 花見小路 / 八坂神社</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">15:00</div>
+                        <div class="desc">鴨川河畔散步 🦆</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">15:40</div>
+                        <div class="desc">藍瓶咖啡 + Le Labo 京都町屋 ☕</div>
+                    </div>
+
+                    <div class="hotel-card">
+                        <span class="hotel-title">🏠 續住：京都好風景酒店</span>
+                        <a href="https://www.google.com.tw/maps/place/Good+Nature+Hotel+Kyoto/@35.0026293,135.766589,17z/data=!3m1!5s0x600108957fd719a7:0x472e27a4b520f540!4m11!3m10!1s0x600108bfc95e7e2d:0x2f8cbb4d2d48f501!5m4!1s2026-04-17!2i2!4m1!1i2!8m2!3d35.0026293!4d135.7691693!16s%2Fg%2F11h1mk__cm?entry=ttu&g_ep=EgoyMDI2MDEwNy4wIKXMDSoASAFQAw%3D%3D" class="map-btn">🗺️ 回飯店休息</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day3" class="page">
+                <div class="checklist-card">
+                    <h3>🦌 3/6(五) 奈良小鹿與大阪</h3>
+                    
+                    <div class="timeline-item">
+                        <div class="time">08:45</div>
+                        <div class="desc">退房 (行李上車)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">09:00</div>
+                        <div class="desc">包車前往奈良 🚐 (約1.5hr)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">10:15</div>
+                        <div class="desc">午餐：志津香釜飯 (大宮店) 🍚</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">12:00</div>
+                        <div class="desc">奈良公園餵鹿 / 東大寺 🍪</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">15:30</div>
+                        <div class="desc">前往大阪 Check-in</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">16:00</div>
+                        <div class="desc">道頓堀 / 心齋橋逛街 (跑跑人拍照) 🏃</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">18:30</div>
+                        <div class="desc">晚餐 + 唐吉軻德大採購 🐧</div>
+                    </div>
+
+                    <div class="hotel-card">
+                        <span class="hotel-title">🏠 女子宿舍(民宿)</span>
+                        <div style="font-size: 0.9rem;">Dotonbori Hotel</div>
+                        <a href="https://www.google.com.tw/maps/place/Apartment+Hotel+11+Dotonbori+4/@34.6675198,135.5024881,17z/data=!4m20!1m8!3m7!1s0x6000e76ac7a51f6b:0xfe1210287ecdbd3a!2z5pel5pys44CSNTQyLTAwNzQgT3Nha2EsIENodW8gV2FyZCwgU2VubmljaGltYWUsIDEtY2jFjW1l4oiSNOKIkjIg5Z2C55S65Lya6aSo!3b1!8m2!3d34.6675198!4d135.5050684!16s%2Fg%2F12hqts211!3m10!1s0x6000e70064139dd9:0x53e1234ca6d7ea8a!5m4!1s2026-04-17!2i2!4m1!1i2!8m2!3d34.6675118!4d135.5051579!16s%2Fg%2F11xmn1j4sc?entry=ttu&g_ep=EgoyMDI2MDEwNy4wIKXMDSoASAFQAw%3D%3D=Apartment Hotel 11 Dotonbori 4" target="_blank" class="map-btn">🗺️ 導航去飯店</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day4" class="page">
+                <div class="checklist-card">
+                    <h3>🏯 3/7(六) 大阪城與夜景</h3>
+                    
+                    <div class="timeline-item">
+                        <div class="time">09:30</div>
+                        <div class="desc">大阪城公園拍照 (最佳光線) ☀️</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">11:30</div>
+                        <div class="desc">橘子街 (Orange Street) 文青散步</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">14:00</div>
+                        <div class="desc">難波八阪神社 (巨大獅子頭) 🦁</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">15:30</div>
+                        <div class="desc">回飯店稍作休息 / 下午茶</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">18:00</div>
+                        <div class="desc">晚餐時間 (居酒屋?) 🍻</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">19:30</div>
+                        <div class="desc">梅田藍天大廈 看夜景 🌃</div>
+                    </div>
+
+                    <div class="hotel-card">
+                        <span class="hotel-title">🏠 續住：女子宿舍(民宿)</span>
+                        <a href="https://www.google.com.tw/maps/place/Apartment+Hotel+11+Dotonbori+4/@34.6675198,135.5024881,17z/data=!4m20!1m8!3m7!1s0x6000e76ac7a51f6b:0xfe1210287ecdbd3a!2z5pel5pys44CSNTQyLTAwNzQgT3Nha2EsIENodW8gV2FyZCwgU2VubmljaGltYWUsIDEtY2jFjW1l4oiSNOKIkjIg5Z2C55S65Lya6aSo!3b1!8m2!3d34.6675198!4d135.5050684!16s%2Fg%2F12hqts211!3m10!1s0x6000e70064139dd9:0x53e1234ca6d7ea8a!5m4!1s2026-04-17!2i2!4m1!1i2!8m2!3d34.6675118!4d135.5051579!16s%2Fg%2F11xmn1j4sc?entry=ttu&g_ep=EgoyMDI2MDEwNy4wIKXMDSoASAFQAw%3D%3D=Apartment Hotel 11 Dotonbori 4"" class="map-btn">🗺️ 回飯店整理戰利品</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day5" class="page">
+                <div class="checklist-card">
+                    <h3>✈️ 3/8(日) 快樂回家</h3>
+                    
+                    <div class="timeline-item">
+                        <div class="time">07:00</div>
+                        <div class="desc">起床吃早餐 / 最後附近逛逛</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">10:00</div>
+                        <div class="desc">退房 Check-out 👋</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">12:00</div>
+                        <div class="desc">出發前往關西機場 🚆</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">13:00</div>
+                        <div class="desc">機場午餐 / 免稅店最後衝刺</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">16:15</div>
+                        <div class="desc">搭機回台北 (CX565) 🛫</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="time">18:55</div>
+                        <div class="desc">抵達甜蜜的家 🏠</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            const clickedBtn = event.target.closest('.tab-btn');
+            if (clickedBtn) {
+                clickedBtn.classList.add('active');
+                clickedBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        }
+    </script>
+</body>
+</html>
